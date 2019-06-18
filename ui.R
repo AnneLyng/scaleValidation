@@ -1,6 +1,6 @@
 ## Purpose of script: (ui.R) Shiny app for Item Response Theory (IRT)
 ##
-## Author: Anne Lyngholm Sørensen
+## Author: Anne Lyngholm Soerensen
 ##
 ## Date Created: 2019-05-28
 ##
@@ -13,6 +13,7 @@ library(shinydashboard)
 library(shinyjs)
 library(data.table)
 library(DT)
+library(sirt)
 
 textInput3<-function (inputId, label, value = "",...) 
 {
@@ -129,25 +130,12 @@ dashboardPage(
                                                 h4("3. Choose score"),
                                                 htmlOutput("scoreSelector"), # intro-text decide on score
                                                 br(),
-                                                actionButton("oneSample", "sum score"),
-                                                actionButton("twoSample", "mean score"),
+                                                actionButton("sumScore", "sum score"),
+                                                actionButton("meanScore", "mean score"),
                                                 htmlOutput("assumptions"),
-                                                actionButton("understand", "I understand the assumptions and the assumptions are fulfilled"),
+                                                actionButton("understand", "Calculate DETECT index"),
                                                 br(),
                                                 br(),
-                                                textOutput("class"),
-                                                br(),
-                                                br(),
-                                                htmlOutput("headArg"),
-                                                hr(),
-                                                fluidRow(width=12,
-                                                         column(width=2,
-                                                                uiOutput("arguments1")),
-                                                         column(width=2,
-                                                                uiOutput("arguments2")),
-                                                         column(width=2,
-                                                                br(),
-                                                                actionButton("startTTest", "Compute t-test"))),
                                                 htmlOutput("result")
                                             ))
                                    )),
