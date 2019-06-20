@@ -178,12 +178,83 @@ server <- function(input, output, session){
                })
   
   
-  ### Wilcoxon-Mann-Whitney test
+  ### Multitrade
   
-  #intro text to Wilcoxon-Mann-Whitney
-  output$introWilcox <- renderText({
-    "This is an introduction to Wilcox - and it is not very good."
+  #intro text to Multitrade
+  output$introMultitrade <- renderText({
+    "Multitrade analysis. For the multitrade analysis you need:"
   })
+  
+  rv <- reactiveValues()
+  observeEvent(input$insertScale,
+               {
+                 # handle the case when user does not provide scale name
+                 divID <- if (input$scales == "") input$insertScale 
+                 else input$scales
+                 btnID <- paste0(divID, "rmv")
+                 
+                 if (is.null(rv[[divID]])) { 
+                   insertUI(
+                     selector = "#placeholder",
+                     ui = tags$div(id = divID,
+                                   actionButton(btnID, "Remove this scale", class = "pull-right btn btn-danger"),
+                                   textInput(paste0("txt",divID), paste("Insert items belonging to scale:",
+                                                                                    input$scales), "item1, item2")
+                     )
+                   )
+               
+                   rv[[divID]] <- TRUE
+                   #rv$id[[divID]] <- paste0("txt",divID)
+                   
+                   # create a listener on the newly-created button that will
+                   # remove it from the app when clicked
+                   observeEvent(input[[btnID]], {
+                     removeUI(selector = paste0("#", divID))
+                     
+                     rv[[divID]] <- NULL
+                     #rv() <- rv$id[names(rv$id) %in% divID == FALSE]      
+                     
+                     
+                   }, ignoreInit = TRUE, once = TRUE)
+                 }
+                
+                output$rvTest <- renderText({
+                  paste(names(rv), unlist(rv))
+                })
+                
+               })
+ 
+  
+  observe({
+    shinyjs::hide("setScale")
+    
+    if(input$insertScale){
+      shinyjs::show("setScale")
+    }
+  })
+
+  observeEvent(input$setScale,
+               {
+                 msg <<- c()
+                 if (length(rv) > 0) {
+                   for (i in names(rv)) {
+                     msg <- c(msg, input[[paste0("txt",i)]])
+                   }
+                   
+                   names(msg) <- names(rv)
+
+                   output$listForNow <- renderText({
+                     paste(names(msg),msg,names(rv),".", sep="")
+                   })
+
+                 } else {
+                   output$listForNow <- renderText({"hej"})
+                 }
+                 
+                 
+               }, once = FALSE)
+
+  
   
   ### Examples
   output$testExamples <- renderText({

@@ -7,6 +7,8 @@
 ## Copyright (c) Anne Lyngholm Soerensen, 2019
 ## Email: lynganne@gmail.com
 
+
+
 # libraries
 library(shiny)
 library(shinydashboard)
@@ -105,7 +107,24 @@ dashboardPage(
                            br(),
                            div(style = 'overflow-x: scroll', tableOutput('contents'))))),
               tabsetPanel(type = "tabs",
-                          tabPanel("Multitrade", textOutput("introMultitrade")),
+                          tabPanel("Multitrade",
+                                   # The Multitrade box
+                                   fluidRow(
+                                     column(width=12, 
+                                            box(id = "multitrade", width = NULL,
+                                                h3("Choose scales, scale items, correlation and restscore"),
+                                                hr(),
+                                                h4("1. Choose scales"),
+                                                uiOutput("scalesSelector"), #intro text to scales
+                                                textInput("scales", "Write the name of the scale:", ''),
+                                                actionButton("insertScale", "Add scale"),
+                                                tags$div(id = "placeholder"),
+                                                textOutput("rvTest"),
+                                                actionButton("setScale", "Set scale(s)"),
+                                                htmlOutput("listForNow")
+                                                ))
+                                   ),
+                                   textOutput("introMultitrade")),
                           tabPanel("DETECT Index",
                                    # The t-test box
                                    useShinyjs(),
