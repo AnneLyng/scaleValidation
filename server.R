@@ -213,7 +213,7 @@ server <- function(input, output, session){
                      
                      rv[[divID]] <- NULL
                      #rv() <- rv$id[names(rv$id) %in% divID == FALSE]      
-                     
+                     # forsøg med at overskrive listen (TODO)
                      
                    }, ignoreInit = TRUE, once = TRUE)
                  }
